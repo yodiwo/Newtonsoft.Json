@@ -76,6 +76,8 @@ namespace Newtonsoft.Json
         private string _dateFormatString;
         private bool _dateFormatStringSet;
 
+        public HashSet<Type> AllowedTypes;
+
         /// <summary>
         /// Occurs when the <see cref="JsonSerializer"/> errors during serialization and deserialization.
         /// </summary>
@@ -640,6 +642,8 @@ namespace Newtonsoft.Json
                     serializer.Converters.Insert(i, settings.Converters[i]);
                 }
             }
+
+            serializer.AllowedTypes = settings.AllowedTypes;
 
             // serializer specific
             if (settings._typeNameHandling != null)
