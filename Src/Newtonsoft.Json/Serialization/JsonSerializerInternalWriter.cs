@@ -577,7 +577,27 @@ namespace Newtonsoft.Json.Serialization
             {
                 WriteReferenceIdProperty(writer, contract.UnderlyingType, value);
             }
-            if (ShouldWriteType(TypeNameHandling.Objects, contract, member, collectionContract, containerProperty))
+
+            //typeid or typename
+            string typeId = null;
+            if (member != null && contract != null && member.AttributeProvider != null)
+            {
+                //find appropriate id from type
+                var type = contract.UnderlyingType;
+                var attrs = member.AttributeProvider?.GetAttributes(true).OfType<JsonTypeIdAttribute>();
+                if (attrs != null)
+                    foreach (var attr in attrs)
+                        if (attr.Type == type)
+                        {
+                            typeId = attr.Id;
+                            break;
+                        }
+                //write
+                if (typeId != null)
+                    WriteTypeIdProperty(writer, typeId);
+            }
+
+            if (typeId == null && ShouldWriteType(TypeNameHandling.Objects, contract, member, collectionContract, containerProperty))
             {
                 WriteTypeProperty(writer, contract.UnderlyingType);
             }
@@ -618,6 +638,17 @@ namespace Newtonsoft.Json.Serialization
 
             writer.WritePropertyName(JsonTypeReflector.TypePropertyName, false);
             writer.WriteValue(typeName);
+        }
+
+        private void WriteTypeIdProperty(JsonWriter writer, string typeId)
+        {
+            if (TraceWriter != null && TraceWriter.LevelFilter >= TraceLevel.Verbose)
+            {
+                TraceWriter.Trace(TraceLevel.Verbose, JsonPosition.FormatMessage(null, writer.Path, "Writing type id '{0}'.".FormatWith(CultureInfo.InvariantCulture, typeId)), null);
+            }
+
+            writer.WritePropertyName(JsonTypeReflector.TypeIdPropertyName, false);
+            writer.WriteValue(typeId);
         }
 
         private bool HasFlag(DefaultValueHandling value, DefaultValueHandling flag)

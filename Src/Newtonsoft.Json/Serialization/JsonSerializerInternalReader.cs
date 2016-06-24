@@ -633,6 +633,16 @@ namespace Newtonsoft.Json.Serialization
                         return true;
                     }
                 }
+
+                JToken typeidToken = current[JsonTypeReflector.TypeIdPropertyName];
+                if (typeidToken != null)
+                {
+                    string typeId = (string)typeidToken;
+                    JsonReader typeTokenReader = typeidToken.CreateReader();
+                    typeTokenReader.ReadAndAssert();
+                    ResolveTypeId(reader, ref objectType, ref contract, member, containerContract, containerMember, typeId);
+                }
+
                 JToken typeToken = current[JsonTypeReflector.TypePropertyName];
                 if (typeToken != null)
                 {
@@ -733,6 +743,16 @@ namespace Newtonsoft.Json.Serialization
                                 metadataProperty = true;
                             }
                         }
+                        else if (string.Equals(propertyName, JsonTypeReflector.TypeIdPropertyName, StringComparison.Ordinal))
+                        {
+                            reader.ReadAndAssert();
+                            id = (reader.Value != null) ? reader.Value.ToString() : null;
+
+                            ResolveTypeId(reader, ref objectType, ref contract, member, containerContract, containerMember, id);
+
+                            reader.ReadAndAssert();
+                            metadataProperty = true;
+                        }
                         else if (string.Equals(propertyName, JsonTypeReflector.TypePropertyName, StringComparison.Ordinal))
                         {
                             reader.ReadAndAssert();
@@ -769,6 +789,26 @@ namespace Newtonsoft.Json.Serialization
                 }
             }
             return false;
+        }
+
+        private void ResolveTypeId(JsonReader reader, ref Type objectType, ref JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, string typeId)
+        {
+            //find appropriate type
+            objectType = null;
+            var attrs = member.AttributeProvider?.GetAttributes(true).OfType<JsonTypeIdAttribute>();
+            if (attrs != null)
+                foreach (var attr in attrs)
+                    if (attr.Id == typeId)
+                    {
+                        objectType = attr.Type;
+                        break;
+                    }
+
+            //throw exception if not found, else update contract
+            if (objectType == null)
+                throw JsonSerializationException.Create(reader, "Error resolving type specified in JSON from typeid '{0}'.".FormatWith(CultureInfo.InvariantCulture, typeId));
+            else
+                contract = GetContractSafe(objectType);
         }
 
         private void ResolveTypeName(JsonReader reader, ref Type objectType, ref JsonContract contract, JsonProperty member, JsonContainerContract containerContract, JsonProperty containerMember, string qualifiedTypeName)
@@ -2459,6 +2499,7 @@ namespace Newtonsoft.Json.Serialization
                     case JsonTypeReflector.IdPropertyName:
                     case JsonTypeReflector.RefPropertyName:
                     case JsonTypeReflector.TypePropertyName:
+                    case JsonTypeReflector.TypeIdPropertyName:
                     case JsonTypeReflector.ArrayValuesPropertyName:
                         reader.Skip();
                         return true;
