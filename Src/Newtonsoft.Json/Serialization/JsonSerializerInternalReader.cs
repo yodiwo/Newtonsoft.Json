@@ -779,7 +779,28 @@ namespace Newtonsoft.Json.Serialization
                 ?? containerMember?.ItemTypeNameHandling
                 ?? Serializer._typeNameHandling;
 
-            if (resolvedTypeNameHandling != TypeNameHandling.None || Serializer.AllowedTypes != null)
+            //find allowed types
+            HashSet<Type> memberAllowedTypes = null;
+            if (resolvedTypeNameHandling == TypeNameHandling.None)
+            {
+                var attrs = member.AttributeProvider?.GetAttributes(true).OfType<JsonAllowedTypeAttribute>();
+                if (attrs != null)
+                {
+                    memberAllowedTypes = new HashSet<Type>();
+                    foreach (var attr in attrs)
+                    {
+                        if (attr.AllowedType != null)
+                            memberAllowedTypes.Add(attr.AllowedType);
+                        if (attr.AllowedTypes != null)
+                            foreach (var t in attr.AllowedTypes)
+                                memberAllowedTypes.Add(t);
+                    }
+
+                    if (memberAllowedTypes.Count == 0) memberAllowedTypes = null;
+                }
+            }
+
+            if (resolvedTypeNameHandling != TypeNameHandling.None || Serializer.AllowedTypes != null || memberAllowedTypes != null)
             {
                 TypeNameKey typeNameKey = ReflectionUtils.SplitFullyQualifiedTypeName(qualifiedTypeName);
 
@@ -813,9 +834,15 @@ namespace Newtonsoft.Json.Serialization
                 }
 
                 //object type filtering
-                if (Serializer.AllowedTypes != null && !Serializer.AllowedTypes.Contains(specifiedType))
+                if (memberAllowedTypes != null)
                 {
-                    throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' was not allowed.".FormatWith(CultureInfo.InvariantCulture, qualifiedTypeName));
+                    if (!memberAllowedTypes.Contains(specifiedType))
+                        throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' was not allowed. (Using member attributes)".FormatWith(CultureInfo.InvariantCulture, qualifiedTypeName));
+                }
+                else if (Serializer.AllowedTypes != null)
+                {
+                    if (!Serializer.AllowedTypes.Contains(specifiedType))
+                        throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' was not allowed.".FormatWith(CultureInfo.InvariantCulture, qualifiedTypeName));
                 }
 
                 objectType = specifiedType;
