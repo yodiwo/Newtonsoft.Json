@@ -50,14 +50,14 @@ namespace Newtonsoft.Json.Serialization
         public const string IdPropertyName = "$id";
         public const string RefPropertyName = "$ref";
         public const string TypePropertyName = "$type";
-        public const string TypeIdPropertyName = "$typeid";
+        public const string TypeSchemaPropertyName = "$schema";
         public const string ValuePropertyName = "$value";
         public const string ArrayValuesPropertyName = "$values";
 
         public const string ShouldSerializePrefix = "ShouldSerialize";
         public const string SpecifiedPostfix = "Specified";
 
-        private static readonly ThreadSafeStore<Type, Func<object[], object>> CreatorCache = 
+        private static readonly ThreadSafeStore<Type, Func<object[], object>> CreatorCache =
             new ThreadSafeStore<Type, Func<object[], object>>(GetCreator);
 
 #if !(NET20 || DOTNET)
@@ -448,7 +448,7 @@ namespace Newtonsoft.Json.Serialization
 #if HAVE_SECURITY_SAFE_CRITICAL_ATTRIBUTE
             [SecuritySafeCritical]
 #endif
-                get
+            get
             {
                 if (_dynamicCodeGeneration == null)
                 {

@@ -33,7 +33,7 @@ namespace Newtonsoft.Json
     /// Instructs the <see cref="JsonSerializer"/> that the specified typeid will be translated to a specific strong type
     /// </summary>
     [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class JsonTypeIdAttribute : Attribute
+    public sealed class JsonSchemaAttribute : Attribute
     {
         /// <summary></summary>
         public string Id;
@@ -41,7 +41,7 @@ namespace Newtonsoft.Json
         public Type Type;
 
         /// <summary></summary>
-        public JsonTypeIdAttribute(string id, Type type)
+        public JsonSchemaAttribute(string id, Type type)
         {
             this.Id = id;
             this.Type = type;

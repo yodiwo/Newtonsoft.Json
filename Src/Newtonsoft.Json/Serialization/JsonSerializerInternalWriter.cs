@@ -584,7 +584,7 @@ namespace Newtonsoft.Json.Serialization
             {
                 //find appropriate id from type
                 var type = contract.UnderlyingType;
-                var attrs = member.AttributeProvider?.GetAttributes(true).OfType<JsonTypeIdAttribute>();
+                var attrs = member.AttributeProvider?.GetAttributes(true).OfType<JsonSchemaAttribute>();
                 if (attrs != null)
                     foreach (var attr in attrs)
                         if (attr.Type == type)
@@ -594,7 +594,7 @@ namespace Newtonsoft.Json.Serialization
                         }
                 //write
                 if (typeId != null)
-                    WriteTypeIdProperty(writer, typeId);
+                    WriteSchemaProperty(writer, typeId);
             }
 
             if (typeId == null && ShouldWriteType(TypeNameHandling.Objects, contract, member, collectionContract, containerProperty))
@@ -640,14 +640,14 @@ namespace Newtonsoft.Json.Serialization
             writer.WriteValue(typeName);
         }
 
-        private void WriteTypeIdProperty(JsonWriter writer, string typeId)
+        private void WriteSchemaProperty(JsonWriter writer, string typeId)
         {
             if (TraceWriter != null && TraceWriter.LevelFilter >= TraceLevel.Verbose)
             {
                 TraceWriter.Trace(TraceLevel.Verbose, JsonPosition.FormatMessage(null, writer.Path, "Writing type id '{0}'.".FormatWith(CultureInfo.InvariantCulture, typeId)), null);
             }
 
-            writer.WritePropertyName(JsonTypeReflector.TypeIdPropertyName, false);
+            writer.WritePropertyName(JsonTypeReflector.TypeSchemaPropertyName, false);
             writer.WriteValue(typeId);
         }
 
