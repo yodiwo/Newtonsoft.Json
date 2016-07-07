@@ -823,7 +823,7 @@ namespace Newtonsoft.Json.Serialization
             HashSet<Type> memberAllowedTypes = null;
             if (resolvedTypeNameHandling == TypeNameHandling.None)
             {
-                var attrs = member.AttributeProvider?.GetAttributes(true).OfType<JsonAllowedTypeAttribute>();
+                var attrs = member?.AttributeProvider?.GetAttributes(true).OfType<JsonAllowedTypeAttribute>();
                 if (attrs != null)
                 {
                     memberAllowedTypes = new HashSet<Type>();
