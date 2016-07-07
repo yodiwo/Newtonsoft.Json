@@ -821,23 +821,46 @@ namespace Newtonsoft.Json.Serialization
 
             //find allowed types
             HashSet<Type> memberAllowedTypes = null;
+            HashSet<Type> memberAllowedDerivedTypes = null;
             if (resolvedTypeNameHandling == TypeNameHandling.None)
             {
+                memberAllowedTypes = new HashSet<Type>();
+                memberAllowedDerivedTypes = new HashSet<Type>();
+
+                //safe type
+                if (objectType.IsDefined(typeof(JsonSafeTypeAttribute), true))
+                {
+                    memberAllowedTypes.Add(objectType);
+                    memberAllowedDerivedTypes.Add(objectType);
+                }
+
+                //process attributes
                 var attrs = member?.AttributeProvider?.GetAttributes(true).OfType<JsonAllowedTypeAttribute>();
                 if (attrs != null)
                 {
                     memberAllowedTypes = new HashSet<Type>();
+                    memberAllowedDerivedTypes = new HashSet<Type>();
                     foreach (var attr in attrs)
                     {
                         if (attr.AllowedType != null)
+                        {
                             memberAllowedTypes.Add(attr.AllowedType);
+                            if (attr.AllowDerivedTypes)
+                                memberAllowedDerivedTypes.Add(attr.AllowedType);
+                        }
                         if (attr.AllowedTypes != null)
+                        {
                             foreach (var t in attr.AllowedTypes)
                                 memberAllowedTypes.Add(t);
+                            if (attr.AllowDerivedTypes)
+                                foreach (var t in attr.AllowedTypes)
+                                    memberAllowedDerivedTypes.Add(t);
+                        }
                     }
-
-                    if (memberAllowedTypes.Count == 0) memberAllowedTypes = null;
                 }
+
+                if (memberAllowedTypes.Count == 0) memberAllowedTypes = null;
+                if (memberAllowedDerivedTypes.Count == 0) memberAllowedDerivedTypes = null;
             }
 
             if (resolvedTypeNameHandling != TypeNameHandling.None || Serializer.AllowedTypes != null || memberAllowedTypes != null)
@@ -877,7 +900,21 @@ namespace Newtonsoft.Json.Serialization
                 if (memberAllowedTypes != null)
                 {
                     if (!memberAllowedTypes.Contains(specifiedType))
-                        throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' was not allowed. (Using member attributes)".FormatWith(CultureInfo.InvariantCulture, qualifiedTypeName));
+                    {
+                        //check for derived types
+                        bool allowed = false;
+                        if (memberAllowedDerivedTypes != null)
+                            foreach (var type in memberAllowedDerivedTypes)
+                            {
+                                if (type.IsAssignableFrom(specifiedType))
+                                {
+                                    allowed = true;
+                                    break;
+                                }
+                            }
+                        if (!allowed)
+                            throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' was not allowed. (Using member attributes)".FormatWith(CultureInfo.InvariantCulture, qualifiedTypeName));
+                    }
                 }
                 else if (Serializer.AllowedTypes != null)
                 {

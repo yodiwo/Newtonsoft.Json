@@ -30,33 +30,9 @@ using System.Text;
 namespace Newtonsoft.Json
 {
     /// <summary>
-    /// Instructs the <see cref="JsonSerializer"/> that the specified types are allowed to be used in with "$type" in deserialization of object/abstract/intrefaces members.
-    /// You can decorate the property/field with multiple JsonAllowedType attributes to allow many different types
     /// </summary>
-    [AttributeUsage(AttributeTargets.Field | AttributeTargets.Property, AllowMultiple = true)]
-    public sealed class JsonAllowedTypeAttribute : Attribute
+    [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct, AllowMultiple = false, Inherited = true)]
+    public sealed class JsonSafeTypeAttribute : Attribute
     {
-        /// <summary></summary>
-        public Type AllowedType;
-        /// <summary></summary>
-        public Type[] AllowedTypes;
-        /// <summary></summary>
-        public bool AllowDerivedTypes;
-
-        /// <summary></summary>
-        public JsonAllowedTypeAttribute(Type AllowedType)
-        {
-            this.AllowedType = AllowedType;
-        }
-        /// <summary></summary>
-        public JsonAllowedTypeAttribute(Type[] AllowedTypes)
-        {
-            this.AllowedTypes = AllowedTypes;
-        }
-        /// <summary></summary>
-        public JsonAllowedTypeAttribute(bool AllowDerivedTypes)
-        {
-            this.AllowDerivedTypes = AllowDerivedTypes;
-        }
     }
 }
