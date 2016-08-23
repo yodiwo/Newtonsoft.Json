@@ -2502,7 +2502,9 @@ namespace Newtonsoft.Json
                 throw JsonReaderException.Create(this, "Cannot read NaN value.");
             }
 
-            throw JsonReaderException.Create(this, "Error parsing NaN value.");
+            //throw JsonReaderException.Create(this, "Error parsing NaN value.");
+            SetToken(JsonToken.Float, 0);
+            return 0;
         }
 
         /// <summary>
