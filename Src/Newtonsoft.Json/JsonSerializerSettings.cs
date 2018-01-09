@@ -86,7 +86,7 @@ namespace Newtonsoft.Json
         internal TypeNameHandling? _typeNameHandling;
         internal MetadataPropertyHandling? _metadataPropertyHandling;
 
-        public HashSet<Type> AllowedTypes;
+        public ISet<Type> AllowedTypes;
 
         /// <summary>
         /// Gets or sets how reference loops (e.g. a class referencing itself) are handled.
