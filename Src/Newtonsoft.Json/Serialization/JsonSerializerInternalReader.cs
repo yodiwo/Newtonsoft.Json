@@ -174,8 +174,8 @@ namespace Newtonsoft.Json.Serialization
                         if (reader.TokenType != JsonToken.Comment)
                         {
                             throw JsonSerializationException.Create(reader, "Additional text found in JSON string after finishing deserializing object.");
+                        }
                     }
-                }
                 }
 
                 return deserializedValue;
@@ -824,12 +824,13 @@ namespace Newtonsoft.Json.Serialization
             HashSet<Type> memberAllowedDerivedTypes = null;
             if (resolvedTypeNameHandling == TypeNameHandling.None)
             {
-                memberAllowedTypes = new HashSet<Type>();
-                memberAllowedDerivedTypes = new HashSet<Type>();
-
                 //safe type
                 if (objectType.IsDefined(typeof(JsonSafeTypeAttribute), true))
                 {
+                    //ensure sets
+                    memberAllowedTypes = memberAllowedTypes ?? new HashSet<Type>();
+                    memberAllowedDerivedTypes = memberAllowedDerivedTypes ?? new HashSet<Type>();
+                    //add
                     memberAllowedTypes.Add(objectType);
                     memberAllowedDerivedTypes.Add(objectType);
                 }
@@ -837,19 +838,24 @@ namespace Newtonsoft.Json.Serialization
                 //process attributes
                 var attrs = member?.AttributeProvider?.GetAttributes(true).OfType<JsonAllowedTypeAttribute>();
                 if (attrs != null)
-                {
-                    memberAllowedTypes = new HashSet<Type>();
-                    memberAllowedDerivedTypes = new HashSet<Type>();
                     foreach (var attr in attrs)
                     {
                         if (attr.AllowedType != null)
                         {
+                            //ensure sets
+                            memberAllowedTypes = memberAllowedTypes ?? new HashSet<Type>();
+                            memberAllowedDerivedTypes = memberAllowedDerivedTypes ?? new HashSet<Type>();
+                            //add
                             memberAllowedTypes.Add(attr.AllowedType);
                             if (attr.AllowDerivedTypes)
                                 memberAllowedDerivedTypes.Add(attr.AllowedType);
                         }
                         if (attr.AllowedTypes != null)
                         {
+                            //ensure sets
+                            memberAllowedTypes = memberAllowedTypes ?? new HashSet<Type>();
+                            memberAllowedDerivedTypes = memberAllowedDerivedTypes ?? new HashSet<Type>();
+                            //add
                             foreach (var t in attr.AllowedTypes)
                                 memberAllowedTypes.Add(t);
                             if (attr.AllowDerivedTypes)
@@ -857,26 +863,25 @@ namespace Newtonsoft.Json.Serialization
                                     memberAllowedDerivedTypes.Add(t);
                         }
                     }
-                }
 
-                if (memberAllowedTypes.Count == 0) memberAllowedTypes = null;
-                if (memberAllowedDerivedTypes.Count == 0) memberAllowedDerivedTypes = null;
+                if (memberAllowedTypes != null && memberAllowedTypes.Count == 0) memberAllowedTypes = null;
+                if (memberAllowedDerivedTypes != null && memberAllowedDerivedTypes.Count == 0) memberAllowedDerivedTypes = null;
             }
 
-            if (resolvedTypeNameHandling != TypeNameHandling.None || Serializer.AllowedTypes != null || memberAllowedTypes != null)
+            //resolve type
+            Type specifiedType = null;
+            bool isSafeType = false;
+            try
             {
                 TypeNameKey typeNameKey = ReflectionUtils.SplitFullyQualifiedTypeName(qualifiedTypeName);
+                specifiedType = Serializer._serializationBinder.BindToType(typeNameKey.AssemblyName, typeNameKey.TypeName);
+                if (specifiedType != null)
+                    isSafeType = specifiedType.IsDefined(typeof(JsonSafeTypeAttribute), true);
+            }
+            catch { }
 
-                Type specifiedType;
-                try
-                {
-                    specifiedType = Serializer._serializationBinder.BindToType(typeNameKey.AssemblyName, typeNameKey.TypeName);
-                }
-                catch (Exception ex)
-                {
-                    throw JsonSerializationException.Create(reader, "Error resolving type specified in JSON '{0}'.".FormatWith(CultureInfo.InvariantCulture, qualifiedTypeName), ex);
-                }
-
+            if (resolvedTypeNameHandling != TypeNameHandling.None || Serializer.AllowedTypes != null || memberAllowedTypes != null || isSafeType)
+            {
                 if (specifiedType == null)
                 {
                     throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' was not resolved.".FormatWith(CultureInfo.InvariantCulture, qualifiedTypeName));
@@ -2144,18 +2149,18 @@ namespace Newtonsoft.Json.Serialization
 
                         if (propertyArrayContract.CanDeserialize)
                         {
-                        object createdObjectCollection = property.ValueProvider.GetValue(createdObject);
-                        if (createdObjectCollection != null)
-                        {
+                            object createdObjectCollection = property.ValueProvider.GetValue(createdObject);
+                            if (createdObjectCollection != null)
+                            {
                                 IList createdObjectCollectionWrapper = (propertyArrayContract.ShouldCreateWrapper) ? propertyArrayContract.CreateWrapper(createdObjectCollection) : (IList)createdObjectCollection;
                                 IList newValues = (propertyArrayContract.ShouldCreateWrapper) ? propertyArrayContract.CreateWrapper(value) : (IList)value;
 
-                            foreach (object newValue in newValues)
-                            {
-                                createdObjectCollectionWrapper.Add(newValue);
+                                foreach (object newValue in newValues)
+                                {
+                                    createdObjectCollectionWrapper.Add(newValue);
+                                }
                             }
                         }
-                    }
                     }
                     else if (propertyContract.ContractType == JsonContractType.Dictionary)
                     {
@@ -2163,28 +2168,28 @@ namespace Newtonsoft.Json.Serialization
 
                         if (!dictionaryContract.IsReadOnlyOrFixedSize)
                         {
-                        object createdObjectDictionary = property.ValueProvider.GetValue(createdObject);
-                        if (createdObjectDictionary != null)
-                        {
-                            IDictionary targetDictionary = (dictionaryContract.ShouldCreateWrapper) ? dictionaryContract.CreateWrapper(createdObjectDictionary) : (IDictionary)createdObjectDictionary;
-                            IDictionary newValues = (dictionaryContract.ShouldCreateWrapper) ? dictionaryContract.CreateWrapper(value) : (IDictionary)value;
-
-                            // Manual use of IDictionaryEnumerator instead of foreach to avoid DictionaryEntry box allocations.
-                            IDictionaryEnumerator e = newValues.GetEnumerator();
-                            try
+                            object createdObjectDictionary = property.ValueProvider.GetValue(createdObject);
+                            if (createdObjectDictionary != null)
                             {
-                                while (e.MoveNext())
+                                IDictionary targetDictionary = (dictionaryContract.ShouldCreateWrapper) ? dictionaryContract.CreateWrapper(createdObjectDictionary) : (IDictionary)createdObjectDictionary;
+                                IDictionary newValues = (dictionaryContract.ShouldCreateWrapper) ? dictionaryContract.CreateWrapper(value) : (IDictionary)value;
+
+                                // Manual use of IDictionaryEnumerator instead of foreach to avoid DictionaryEntry box allocations.
+                                IDictionaryEnumerator e = newValues.GetEnumerator();
+                                try
                                 {
-                                    DictionaryEntry entry = e.Entry;
-                                    targetDictionary[entry.Key] = entry.Value;
+                                    while (e.MoveNext())
+                                    {
+                                        DictionaryEntry entry = e.Entry;
+                                        targetDictionary[entry.Key] = entry.Value;
+                                    }
+                                }
+                                finally
+                                {
+                                    (e as IDisposable)?.Dispose();
                                 }
                             }
-                            finally
-                            {
-                                (e as IDisposable)?.Dispose();
-                            }
                         }
-                    }
                     }
 
                     context.Used = true;
@@ -2452,7 +2457,7 @@ namespace Newtonsoft.Json.Serialization
 
                                     JsonConverter propertyConverter = GetConverter(property.PropertyContract, property.MemberConverter, contract, member);
 
-                                if (!reader.ReadForType(property.PropertyContract, propertyConverter != null))
+                                    if (!reader.ReadForType(property.PropertyContract, propertyConverter != null))
                                     {
                                         throw JsonSerializationException.Create(reader, "Unexpected end when setting {0}'s value.".FormatWith(CultureInfo.InvariantCulture, memberName));
                                     }
@@ -2470,7 +2475,7 @@ namespace Newtonsoft.Json.Serialization
                             {
                                 if (IsErrorHandled(newObject, contract, memberName, reader as IJsonLineInfo, reader.Path, ex))
                                 {
-                                HandleError(reader, true, initialDepth - 1);
+                                    HandleError(reader, true, initialDepth - 1);
                                 }
                                 else
                                 {
