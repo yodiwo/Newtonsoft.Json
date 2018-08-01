@@ -78,6 +78,8 @@ namespace Newtonsoft.Json
 
         public ISet<Type> AllowedTypes;
 
+        internal bool WriteRootObjectTypeName;
+
         /// <summary>
         /// Occurs when the <see cref="JsonSerializer"/> errors during serialization and deserialization.
         /// </summary>
@@ -644,6 +646,7 @@ namespace Newtonsoft.Json
             }
 
             serializer.AllowedTypes = settings.AllowedTypes;
+            serializer.WriteRootObjectTypeName = settings.WriteRootObjectTypeName;
 
             // serializer specific
             if (settings._typeNameHandling != null)

@@ -88,6 +88,8 @@ namespace Newtonsoft.Json
 
         public ISet<Type> AllowedTypes;
 
+        public bool WriteRootObjectTypeName;
+
         /// <summary>
         /// Gets or sets how reference loops (e.g. a class referencing itself) are handled.
         /// </summary>

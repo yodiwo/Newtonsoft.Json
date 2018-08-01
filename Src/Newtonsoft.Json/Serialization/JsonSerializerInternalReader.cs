@@ -825,7 +825,7 @@ namespace Newtonsoft.Json.Serialization
             if (resolvedTypeNameHandling == TypeNameHandling.None)
             {
                 //safe type
-                if (objectType.IsDefined(typeof(JsonSafeTypeAttribute), true))
+                if (objectType != null && objectType.IsDefined(typeof(JsonSafeTypeAttribute), true))
                 {
                     //ensure sets
                     memberAllowedTypes = memberAllowedTypes ?? new HashSet<Type>();
