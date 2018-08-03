@@ -898,7 +898,10 @@ namespace Newtonsoft.Json.Serialization
 #endif
                     && !objectType.IsAssignableFrom(specifiedType))
                 {
-                    throw JsonSerializationException.Create(reader, "Type specified in JSON '{0}' is not compatible with '{1}'.".FormatWith(CultureInfo.InvariantCulture, specifiedType.AssemblyQualifiedName, objectType.AssemblyQualifiedName));
+                    if (TraceWriter != null && TraceWriter.LevelFilter >= TraceLevel.Warning)
+                        TraceWriter.Trace(TraceLevel.Warning, JsonPosition.FormatMessage(reader as IJsonLineInfo, reader.Path, "Type specified in JSON '{0}' is not compatible with '{1}'.".FormatWith(CultureInfo.InvariantCulture, specifiedType.AssemblyQualifiedName, objectType.AssemblyQualifiedName)), null);
+                    //ignore type
+                    return;
                 }
 
                 //object type filtering
