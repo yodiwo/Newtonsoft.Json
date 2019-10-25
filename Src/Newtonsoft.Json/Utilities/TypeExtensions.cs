@@ -269,11 +269,16 @@ namespace Newtonsoft.Json.Utilities
 #if (DOTNET || PORTABLE)
         public static bool IsDefined(this Type type, Type attributeType, bool inherit)
         {
-            return type.GetTypeInfo().CustomAttributes.Any(a => a.AttributeType == attributeType);
+            return type.GetTypeInfo().GetCustomAttribute(attributeType, inherit) != null;
+        }
+
+        public static T GetCustomAttribute<T>(this Type type, bool inherit) where T : Attribute
+        {
+            return type.GetTypeInfo().GetCustomAttribute<T>(inherit);
         }
 
 #if !DOTNET
-        
+
         public static MethodInfo GetMethod(this Type type, string name)
         {
             return type.GetMethod(name, DefaultFlags);
@@ -308,7 +313,7 @@ namespace Newtonsoft.Json.Utilities
         {
             return type.GetTypeInfo().DeclaredConstructors.Where(c => TestAccessibility(c, bindingFlags));
         }
-        
+
         public static ConstructorInfo GetConstructor(this Type type, IList<Type> parameterTypes)
         {
             return type.GetConstructor(DefaultFlags, null, parameterTypes, null);
@@ -318,7 +323,7 @@ namespace Newtonsoft.Json.Utilities
         {
             return MethodBinder.SelectMethod(type.GetConstructors(bindingFlags), parameterTypes);
         }
-        
+
         public static MemberInfo[] GetMember(this Type type, string member)
         {
             return type.GetMemberInternal(member, null, DefaultFlags);
@@ -462,15 +467,15 @@ namespace Newtonsoft.Json.Utilities
         {
             if (member is FieldInfo)
             {
-                return TestAccessibility((FieldInfo) member, bindingFlags);
+                return TestAccessibility((FieldInfo)member, bindingFlags);
             }
             else if (member is MethodBase)
             {
-                return TestAccessibility((MethodBase) member, bindingFlags);
+                return TestAccessibility((MethodBase)member, bindingFlags);
             }
             else if (member is PropertyInfo)
             {
-                return TestAccessibility((PropertyInfo) member, bindingFlags);
+                return TestAccessibility((PropertyInfo)member, bindingFlags);
             }
 
             throw new Exception("Unexpected member type.");
@@ -541,7 +546,7 @@ namespace Newtonsoft.Json.Utilities
             return type.GetTypeInfo().IsValueType;
 #endif
         }
-        
+
         public static bool IsPrimitive(this Type type)
         {
 #if HAVE_FULL_REFLECTION
