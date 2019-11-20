@@ -25,19 +25,19 @@
 
 using System;
 using System.Collections.Generic;
-using Newtonsoft.Json.Serialization;
+using Yodiwo.Json.Serialization;
 #if !HAVE_LINQ
-using Newtonsoft.Json.Utilities.LinqBridge;
+using Yodiwo.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 #endif
 using System.Globalization;
-using Newtonsoft.Json.Utilities;
-using Newtonsoft.Json.Linq;
+using Yodiwo.Json.Utilities;
+using Yodiwo.Json.Linq;
 
-namespace Newtonsoft.Json.Schema
+namespace Yodiwo.Json.Schema
 {
-    [Obsolete("JSON Schema validation has been moved to its own package. See http://www.newtonsoft.com/jsonschema for more details.")]
+    [Obsolete("JSON Schema validation has been moved to its own package. See http://www.Yodiwo.com/jsonschema for more details.")]
     internal class JsonSchemaBuilder
     {
         private readonly IList<JsonSchema> _stack;

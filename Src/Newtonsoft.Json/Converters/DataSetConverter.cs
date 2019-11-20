@@ -26,9 +26,9 @@
 #if HAVE_ADO_NET
 using System;
 using System.Data;
-using Newtonsoft.Json.Serialization;
+using Yodiwo.Json.Serialization;
 
-namespace Newtonsoft.Json.Converters
+namespace Yodiwo.Json.Converters
 {
     /// <summary>
     /// Converts a <see cref="DataSet"/> to and from JSON.

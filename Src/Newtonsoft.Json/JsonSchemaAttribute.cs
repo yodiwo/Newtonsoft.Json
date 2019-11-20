@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Newtonsoft.Json
+namespace Yodiwo.Json
 {
     /// <summary>
     /// Instructs the <see cref="JsonSerializer"/> that the specified typeid will be translated to a specific strong type

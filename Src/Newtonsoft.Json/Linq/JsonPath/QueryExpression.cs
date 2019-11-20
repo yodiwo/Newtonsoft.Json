@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 #if !HAVE_LINQ
-using Newtonsoft.Json.Utilities.LinqBridge;
+using Yodiwo.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 #endif
-using Newtonsoft.Json.Utilities;
+using Yodiwo.Json.Utilities;
 
-namespace Newtonsoft.Json.Linq.JsonPath
+namespace Yodiwo.Json.Linq.JsonPath
 {
     internal enum QueryOperator
     {

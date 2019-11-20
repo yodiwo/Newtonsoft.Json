@@ -5,14 +5,14 @@ param($installPath, $toolsPath, $package, $project)
 
 try
 {
-  $url = "http://www.newtonsoft.com/json/install?version=" + $package.Version
+  $url = "http://www.Yodiwo.com/json/install?version=" + $package.Version
   $dte2 = Get-Interface $dte ([EnvDTE80.DTE2])
 
   if ($dte2.ActiveWindow.Caption -eq "Package Manager Console")
   {
     # user is installing from VS NuGet console
     # get reference to the window, the console host and the input history
-    # show webpage if "install-package newtonsoft.json" was last input
+    # show webpage if "install-package Yodiwo.json" was last input
 
     $consoleWindow = $(Get-VSComponentModel).GetService([NuGetConsole.IPowerConsoleWindow])
 
@@ -32,7 +32,7 @@ try
     if ($lastCommand)
     {
       $lastCommand = $lastCommand.Trim().ToLower()
-      if ($lastCommand.StartsWith("install-package") -and $lastCommand.Contains("newtonsoft.json"))
+      if ($lastCommand.StartsWith("install-package") -and $lastCommand.Contains("Yodiwo.json"))
       {
         $dte2.ItemOperations.Navigate($url) | Out-Null
       }
@@ -42,7 +42,7 @@ try
   {
     # user is installing from VS NuGet dialog
     # get reference to the window, then smart output console provider
-    # show webpage if messages in buffered console contains "installing...newtonsoft.json" in last operation
+    # show webpage if messages in buffered console contains "installing...Yodiwo.json" in last operation
 
     $instanceField = [NuGet.Dialog.PackageManagerWindow].GetField("CurrentInstance", [System.Reflection.BindingFlags]::Static -bor `
       [System.Reflection.BindingFlags]::NonPublic)
@@ -78,7 +78,7 @@ try
 
       $lines = $lastOperation -split "`r`n"
 
-      $installMatch = $lines | ? { $_.StartsWith("------- installing...newtonsoft.json ") } | select -first 1
+      $installMatch = $lines | ? { $_.StartsWith("------- installing...Yodiwo.json ") } | select -first 1
 
       if ($installMatch)
       {
@@ -97,7 +97,7 @@ catch
     $selection.StartOfDocument($false)
     $selection.EndOfDocument($true)
 
-    if ($selection.Text.StartsWith("Attempting to gather dependencies information for package 'Newtonsoft.Json." + $package.Version + "'"))
+    if ($selection.Text.StartsWith("Attempting to gather dependencies information for package 'Yodiwo.Json." + $package.Version + "'"))
     {
       # don't show on upgrade
       if (!$selection.Text.Contains("Removed package"))

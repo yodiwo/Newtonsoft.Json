@@ -1,27 +1,21 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
+    <AssemblyName>Yodiwo.Json</AssemblyName>
     <TargetFrameworks>netstandard1.3</TargetFrameworks>
     <AssemblyVersion>10.0.0.0</AssemblyVersion>
     <FileVersion>10.0.1</FileVersion>
     <VersionPrefix>10.0.1</VersionPrefix>
-    <VersionSuffix>beta1</VersionSuffix>
-    <Authors>James Newton-King</Authors>
-    <Company>Newtonsoft</Company>
-    <Product>Json.NET</Product>
-    <Description>Json.NET is a popular high-performance JSON framework for .NET</Description>
-    <Copyright>Copyright © James Newton-King 2008</Copyright>
-    <Summary>Json.NET is a popular high-performance JSON framework for .NET</Summary>
     <NeutralLanguage>en-US</NeutralLanguage>
     <Title>Json.NET</Title>
-    <PackageId>Newtonsoft.Json</PackageId>
+    <PackageId>Yodiwo.Json</PackageId>
     <PackageTags>json</PackageTags>
-    <PackageIconUrl>http://www.newtonsoft.com/content/images/nugeticon.png</PackageIconUrl>
-    <PackageProjectUrl>http://www.newtonsoft.com/json</PackageProjectUrl>
-    <PackageLicenseUrl>https://raw.github.com/JamesNK/Newtonsoft.Json/master/LICENSE.md</PackageLicenseUrl>
-    <RepositoryUrl>https://github.com/JamesNK/Newtonsoft.Json</RepositoryUrl>
+    <PackageIconUrl>http://www.Yodiwo.com/content/images/nugeticon.png</PackageIconUrl>
+    <PackageProjectUrl>http://www.Yodiwo.com/json</PackageProjectUrl>
+    <PackageLicenseUrl>https://raw.github.com/JamesNK/Yodiwo.Json/master/LICENSE.md</PackageLicenseUrl>
+    <RepositoryUrl>https://github.com/JamesNK/Yodiwo.Json</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <RootNamespace>Newtonsoft.Json</RootNamespace>
-    <AssemblyName>Newtonsoft.Json</AssemblyName>
+    <RootNamespace>Yodiwo.Json</RootNamespace>
+    <AssemblyName>Yodiwo.Json</AssemblyName>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <NetStandardImplicitPackageVersion>1.6.1</NetStandardImplicitPackageVersion>
     <MinClientVersion>2.12</MinClientVersion>

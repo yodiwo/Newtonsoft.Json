@@ -29,18 +29,18 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 #endif
 using System.Threading;
-using Newtonsoft.Json.Utilities;
+using Yodiwo.Json.Utilities;
 using System.Collections;
 using System.Globalization;
 using System.ComponentModel;
 #if !HAVE_LINQ
-using Newtonsoft.Json.Utilities.LinqBridge;
+using Yodiwo.Json.Utilities.LinqBridge;
 #else
 using System.Linq;
 
 #endif
 
-namespace Newtonsoft.Json.Linq
+namespace Yodiwo.Json.Linq
 {
     /// <summary>
     /// Represents a token that can contain other tokens.

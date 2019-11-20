@@ -25,9 +25,9 @@
 
 using System;
 using System.Globalization;
-using Newtonsoft.Json.Utilities;
+using Yodiwo.Json.Utilities;
 
-namespace Newtonsoft.Json.Converters
+namespace Yodiwo.Json.Converters
 {
     /// <summary>
     /// Converts a <see cref="DateTime"/> to and from a JavaScript <c>Date</c> constructor (e.g. <c>new Date(52231943)</c>).

@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Newtonsoft.Json
+namespace Yodiwo.Json
 {
     /// <summary>
     /// Specifies missing member handling options for the <see cref="JsonSerializer"/>.

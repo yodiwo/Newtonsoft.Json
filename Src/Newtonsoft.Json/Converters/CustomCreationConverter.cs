@@ -25,9 +25,9 @@
 
 using System;
 using System.Reflection;
-using Newtonsoft.Json.Utilities;
+using Yodiwo.Json.Utilities;
 
-namespace Newtonsoft.Json.Converters
+namespace Yodiwo.Json.Converters
 {
     /// <summary>
     /// Creates a custom object.

@@ -31,9 +31,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using Newtonsoft.Json.Serialization;
+using Yodiwo.Json.Serialization;
 
-namespace Newtonsoft.Json.Utilities
+namespace Yodiwo.Json.Utilities
 {
     internal static class ImmutableCollectionsUtils
     {

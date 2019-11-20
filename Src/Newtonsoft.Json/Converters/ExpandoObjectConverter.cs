@@ -31,9 +31,9 @@ using System.Dynamic;
 using System.Globalization;
 using System.Linq;
 using System.Text;
-using Newtonsoft.Json.Utilities;
+using Yodiwo.Json.Utilities;
 
-namespace Newtonsoft.Json.Converters
+namespace Yodiwo.Json.Converters
 {
     /// <summary>
     /// Converts an <see cref="ExpandoObject"/> to and from JSON.

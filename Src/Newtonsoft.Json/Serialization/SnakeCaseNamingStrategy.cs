@@ -1,6 +1,6 @@
-﻿using Newtonsoft.Json.Utilities;
+﻿using Yodiwo.Json.Utilities;
 
-namespace Newtonsoft.Json.Serialization
+namespace Yodiwo.Json.Serialization
 {
     /// <summary>
     /// A snake case naming strategy.

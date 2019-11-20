@@ -27,7 +27,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Newtonsoft.Json
+namespace Yodiwo.Json
 {
     /// <summary>
     /// Instructs the <see cref="JsonSerializer"/> that the specified types are allowed to be used in with "$type" in deserialization of object/abstract/intrefaces members.

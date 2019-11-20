@@ -25,7 +25,7 @@
 
 using System;
 
-namespace Newtonsoft.Json.Utilities
+namespace Yodiwo.Json.Utilities
 {
     internal struct StringReference
     {

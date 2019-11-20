@@ -7,7 +7,7 @@ using System.Numerics;
 #endif
 using System.Text;
 
-namespace Newtonsoft.Json.Serialization
+namespace Yodiwo.Json.Serialization
 {
     internal class TraceJsonWriter : JsonWriter
     {

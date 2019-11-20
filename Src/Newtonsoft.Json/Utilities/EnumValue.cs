@@ -23,7 +23,7 @@
 // OTHER DEALINGS IN THE SOFTWARE.
 #endregion
 
-namespace Newtonsoft.Json.Utilities
+namespace Yodiwo.Json.Utilities
 {
     internal class EnumValue<T> where T : struct
     {

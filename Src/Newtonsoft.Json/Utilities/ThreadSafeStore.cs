@@ -26,12 +26,12 @@
 using System;
 using System.Collections.Generic;
 #if !HAVE_LINQ
-using Newtonsoft.Json.Utilities.LinqBridge;
+using Yodiwo.Json.Utilities.LinqBridge;
 #endif
 using System.Threading;
-using Newtonsoft.Json.Serialization;
+using Yodiwo.Json.Serialization;
 
-namespace Newtonsoft.Json.Utilities
+namespace Yodiwo.Json.Utilities
 {
     internal class ThreadSafeStore<TKey, TValue>
     {

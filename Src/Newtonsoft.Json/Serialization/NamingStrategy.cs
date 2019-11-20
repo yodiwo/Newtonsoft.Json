@@ -1,4 +1,4 @@
-﻿namespace Newtonsoft.Json.Serialization
+﻿namespace Yodiwo.Json.Serialization
 {
     /// <summary>
     /// A base class for resolving how property names and dictionary keys are serialized.
